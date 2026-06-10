@@ -112,6 +112,11 @@ const projectDirectionItems = [
     category: 'UI设计 / 交互原型',
     image: '/assets/direction-travel-app.png',
   },
+  {
+    title: 'AI作品展示',
+    category: 'LOADING / 持续更新中',
+    isLoading: true,
+  },
 ];
 
 const partnerMarks = [
@@ -753,8 +758,19 @@ function ProjectsSection() {
 
           <div className="direction-grid">
             {projectDirectionItems.map((item) => (
-              <article className="direction-card" key={item.title}>
-                <img src={item.image} alt={`${item.title}作品方向`} />
+              <article
+                className={`direction-card ${item.isLoading ? 'direction-card--loading' : ''}`}
+                key={item.title}
+              >
+                {item.isLoading ? (
+                  <div className="direction-loading-visual" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                ) : (
+                  <img src={item.image} alt={`${item.title}作品方向`} />
+                )}
                 <h3>{item.title}</h3>
                 <p>{item.category}</p>
               </article>
