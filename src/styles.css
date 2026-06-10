@@ -2401,11 +2401,21 @@ video {
   }
 
   .showcase-wall {
-    display: grid;
+    display: flex;
     height: auto;
     min-height: 0;
-    gap: 18px;
+    gap: 14px;
     margin-top: 24px;
+    margin-right: -16px;
+    padding: 0 16px 10px 0;
+    overflow-x: auto;
+    scroll-padding-left: 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .showcase-wall::-webkit-scrollbar {
+    display: none;
   }
 
   .showcase-card,
@@ -2415,9 +2425,11 @@ video {
   .showcase-card--right {
     position: relative;
     inset: auto;
-    width: 100%;
+    flex: 0 0 min(78vw, 340px);
+    width: min(78vw, 340px);
     height: auto;
     aspect-ratio: 4 / 5;
+    scroll-snap-align: start;
     transform: none;
     animation: none;
   }
@@ -2481,13 +2493,18 @@ video {
   }
 
   .direction-grid {
-    grid-template-columns: 1fr;
-    gap: 28px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 12px;
   }
 
   .direction-card h3 {
-    margin-top: 14px;
-    font-size: 16px;
+    margin-top: 12px;
+    font-size: 14px;
+  }
+
+  .direction-card p {
+    margin-top: 6px;
+    font-size: 11px;
   }
 
   .portfolio-fit {
@@ -2679,6 +2696,8 @@ video {
   .showcase-card--middle,
   .showcase-card--dark,
   .showcase-card--right {
+    flex-basis: 78vw;
+    width: 78vw;
     aspect-ratio: 3.7 / 5;
   }
 
@@ -2687,7 +2706,16 @@ video {
   }
 
   .direction-grid {
-    gap: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 10px;
+  }
+
+  .direction-card h3 {
+    font-size: 13px;
+  }
+
+  .direction-card p {
+    font-size: 10px;
   }
 
   .partner-mark-grid {
