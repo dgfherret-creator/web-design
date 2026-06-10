@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ArrowUpRight,
   BriefcaseBusiness,
@@ -6,6 +6,7 @@ import {
   Component,
   Grid3X3,
   Handshake,
+  LoaderCircle,
   Mail,
   MapPin,
   Menu,
@@ -700,7 +701,59 @@ function ProfileSection() {
 
 function ProjectsSection() {
   const [selectedFitChoice, setSelectedFitChoice] = useState(null);
+  const showcaseWallRef = useRef(null);
   const selectedFitMessage = fitChoices.find((choice) => choice.id === selectedFitChoice)?.message;
+
+  useEffect(() => {
+    const wall = showcaseWallRef.current;
+    if (!wall) return undefined;
+
+    const mobileQuery = window.matchMedia('(max-width: 900px)');
+    let timerId;
+    let currentIndex = 0;
+
+    const getCards = () => Array.from(wall.querySelectorAll('.showcase-card'));
+    const scrollToCard = (index) => {
+      const cards = getCards();
+      const card = cards[index];
+      if (!card) return;
+      currentIndex = index;
+      wall.scrollTo({
+        left: card.offsetLeft - wall.offsetLeft,
+        behavior: 'smooth',
+      });
+    };
+    const startAutoPaging = () => {
+      window.clearInterval(timerId);
+      if (!mobileQuery.matches) return;
+      timerId = window.setInterval(() => {
+        const cards = getCards();
+        if (cards.length < 2) return;
+        scrollToCard((currentIndex + 1) % cards.length);
+      }, 2800);
+    };
+
+    const syncFromManualScroll = () => {
+      const cards = getCards();
+      if (!cards.length) return;
+      const nearestIndex = cards.reduce((nearest, card, index) => {
+        const currentDistance = Math.abs(card.offsetLeft - wall.offsetLeft - wall.scrollLeft);
+        const nearestDistance = Math.abs(cards[nearest].offsetLeft - wall.offsetLeft - wall.scrollLeft);
+        return currentDistance < nearestDistance ? index : nearest;
+      }, currentIndex);
+      currentIndex = nearestIndex;
+    };
+
+    startAutoPaging();
+    wall.addEventListener('scroll', syncFromManualScroll, { passive: true });
+    mobileQuery.addEventListener('change', startAutoPaging);
+
+    return () => {
+      window.clearInterval(timerId);
+      wall.removeEventListener('scroll', syncFromManualScroll);
+      mobileQuery.removeEventListener('change', startAutoPaging);
+    };
+  }, []);
 
   return (
     <section className="projects-section section-screen section-stage" id="projects">
@@ -716,7 +769,7 @@ function ProjectsSection() {
           scrambleCharset="SHOWCASE0123456789AIUX"
         />
 
-        <div className="showcase-wall" aria-label="精选项目展示">
+        <div className="showcase-wall" aria-label="精选项目展示" ref={showcaseWallRef}>
           {projects.slice(0, 4).map((project, index) => (
             <article
               className={`showcase-card ${showcaseCards[index]}`}
@@ -764,9 +817,13 @@ function ProjectsSection() {
               >
                 {item.isLoading ? (
                   <div className="direction-loading-visual" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
+                    <LoaderCircle className="direction-loading-icon" size={34} strokeWidth={1.7} />
+                    <strong>加载中</strong>
+                    <div className="direction-loading-dots">
+                      <span />
+                      <span />
+                      <span />
+                    </div>
                   </div>
                 ) : (
                   <img src={item.image} alt={`${item.title}作品方向`} />
