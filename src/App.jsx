@@ -86,7 +86,7 @@ const projectDirectionItems = [
   {
     title: '成都某飞综合数据处理系统',
     category: 'B/G端系统 UI/UX',
-    image: '/assets/direction-coffee.png',
+    image: '/assets/showcase-avic-system.png',
   },
   {
     title: '沫小兔 / 诗嘶蛙品牌IP',
