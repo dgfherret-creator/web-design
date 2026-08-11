@@ -32,7 +32,7 @@ export const metrics = [
 
 export const experience = [
   {
-    period: '2024.07 - 2026.04',
+    period: '2024.06 - 2026.04',
     company: '博彦科技有限公司',
     title: 'UI/平面设计师',
     detail:
